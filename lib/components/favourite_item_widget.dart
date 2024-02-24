@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../res/color_palette.dart';
 import '../utils/helpers.dart';
@@ -35,7 +36,7 @@ class FavouriteItemWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         image:  DecorationImage(
-                            image: NetworkImage(
+                            image: CachedNetworkImageProvider(
                                 image!))),
                   ),
                   Expanded(

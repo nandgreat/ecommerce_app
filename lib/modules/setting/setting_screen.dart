@@ -1,19 +1,11 @@
 import 'package:ecommerce_app/components/base_screen.dart';
 import 'package:ecommerce_app/configs/routes_contants.dart';
-import 'package:ecommerce_app/modules/cart/cart_controller.dart';
-import 'package:ecommerce_app/modules/cart/cart_controller.dart';
-import 'package:ecommerce_app/modules/product_details/product_details_controller.dart';
 import 'package:ecommerce_app/res/color_palette.dart';
-import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../components/cart_button.dart';
 import '../../components/custom_button.dart';
-import '../../models/products/AnotherFakeApiProduct.dart';
 import '../../utils/local_storage_helper.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -24,7 +16,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  CartController cartController = Get.put(CartController());
   final _formKey = GlobalKey<FormState>();
 
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../res/color_palette.dart';
-import '../res/images.dart';
 import '../utils/helpers.dart';
 import 'app_bar.dart';
 

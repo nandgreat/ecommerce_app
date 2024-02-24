@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/configs/routes_contants.dart';
 import 'package:ecommerce_app/models/products/DummyProductsResponse.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class ProductItem extends StatelessWidget {
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.white30, width: 1.0),
                           image: DecorationImage(
-                              image: NetworkImage(product.thumbnail!.replaceFirst("[\"", "").replaceFirst("\"]", "") ?? ""),
+                              image: CachedNetworkImageProvider(product.thumbnail!.replaceFirst("[\"", "").replaceFirst("\"]", "") ?? ""),
                               fit: BoxFit.contain)),
                     ),
                   ),

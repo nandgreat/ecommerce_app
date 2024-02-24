@@ -1,6 +1,9 @@
-class Endpoints {
-  static const String APP_NAME = "ECommerce App";
-  static const int APP_VERSION = 1;
+
+class DBConstants {
+  static const String productBox = "ecommerce_box";
+  static const String cartBox = "cart_items";
+  static const String cartItemsKey = "cart_items";
+  static const String favouritesBox = "favourite_items_box";
 
   static const String BASE_URL = "https://betahome-api-3c38ed5544c3.herokuapp.com/api/v1/";
   // static const String FAKEAPI_BASE_URL = "https://fakestoreapi.com/";

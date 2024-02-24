@@ -14,6 +14,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../models/login/User.dart';
 
 class LoginController extends GetxController {
+
+  //Initializing the Auth Repository
   final AuthRepository _authRepository = AuthRepository();
   Rx<User?> user = User().obs;
   var isLoading = false.obs;
@@ -23,6 +25,7 @@ class LoginController extends GetxController {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
+  //Initializing Connection Manager Controller to detect network change
   ConnectionManagerController connectionManagerController =
       Get.put(ConnectionManagerController());
 
@@ -35,6 +38,7 @@ class LoginController extends GetxController {
   Future<void> login(BuildContext context) async {
     RxInt idFromFirstController = connectionManagerController.connectionType;
 
+    //Checking For internet connection
     if (idFromFirstController.value == 0) {
       showNoInternetSnackBar(context);
       return;
@@ -44,6 +48,7 @@ class LoginController extends GetxController {
 
     var email = emailController.text.trim();
 
+    //Login Request Class
     LoginRequest loginRequest = LoginRequest(
         id: emailController.text.trim(),
         deviceToken: token.value.trim(),
@@ -51,8 +56,10 @@ class LoginController extends GetxController {
 
 
     try {
+      // Network Request
       Response? response = await _authRepository.login(loginRequest);
 
+      // Check for Poor internet Connection
       if (response!.body == null) {
         showSnackBar(context,
             title: "Error",
@@ -71,13 +78,21 @@ class LoginController extends GetxController {
         var token = LoginResponse.fromJson(response.body).data?.token;
         String userString = userToJson(user.value!);
 
+        // Initializing the Local storage helper class
         LocalStorageHelper localStorageHelper = LocalStorageHelper();
+
+        // Store the user token
         await localStorageHelper.storeItem(key: "token", value: token!);
+
+        // Storage the User String to secure storage
         await localStorageHelper.storeItem(key: "user", value: userString);
+
 
         context.pushReplacementNamed(AppRoutes.rootHome.name);
 
         update();
+
+        // Runs when the User has not completed their registration
       } else if (response.statusCode == 402) {
         var message = LoginResponse.fromJson(response.body).message.toString();
 

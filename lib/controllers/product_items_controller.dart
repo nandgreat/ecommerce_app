@@ -6,6 +6,7 @@ import 'package:ecommerce_app/data/repositories/auth.dart';
 import 'package:ecommerce_app/models/login/LoginRequest.dart';
 import 'package:ecommerce_app/models/login/LoginResponse.dart';
 import 'package:ecommerce_app/models/products/Product.dart';
+import 'package:ecommerce_app/utils/db_constants.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:ecommerce_app/utils/local_storage_helper.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import '../../models/login/User.dart';
+import '../models/login/User.dart';
 
 class ProductDetailsController extends GetxController {
   final AuthRepository _authRepository = AuthRepository();
@@ -42,8 +43,8 @@ class ProductDetailsController extends GetxController {
     super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       logItem("we are here oooo");
-      box = await Hive.openBox('ecommerce_box'); // open box
-      box2 = await Hive.openBox('favourite_items_box');
+      box = await Hive.openBox(DBConstants.productBox); // open box
+      box2 = await Hive.openBox(DBConstants.favouritesBox);
       await getItems();
     });
   }
@@ -51,7 +52,7 @@ class ProductDetailsController extends GetxController {
   getItems() async {
     try {
       logItem("§§§§§§§§§§§§§§§§§§§§§§§§");
-      items.value = await box.get('cart_items', defaultValue: []);
+      items.value = await box.get(DBConstants.cartItemsKey, defaultValue: []);
       totalCartItems();
 
     } catch (error) {
@@ -159,7 +160,7 @@ class ProductDetailsController extends GetxController {
 
     logItem(items);
 
-    await box.put('cart_items', items);
+    await box.put(DBConstants.cartItemsKey, items);
 
     showSnackBar(context,
         title: "Added Successfuly",

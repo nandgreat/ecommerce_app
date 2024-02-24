@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import '../../utils/helpers.dart';
 
 import '../../res/color_palette.dart';
-import '../../res/images.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final String email;
@@ -76,7 +75,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Enter OTP",
                           style: TextStyle(
                               height: 1,

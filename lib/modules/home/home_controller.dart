@@ -2,6 +2,7 @@ import 'package:ecommerce_app/controllers/connection_manager_controller.dart';
 import 'package:ecommerce_app/data/db/tables/db_products.dart';
 import 'package:ecommerce_app/models/products/FakeApiProducts.dart';
 import 'package:ecommerce_app/models/products/FakeApiProductsResponse.dart';
+import 'package:ecommerce_app/utils/db_constants.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,23 +36,26 @@ class HomeController extends GetxController {
     super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       logItem("we are here oooo");
-      box = await Hive.openBox('ecommerce_box'); // open box
+      box = await Hive.openBox(DBConstants.productBox); // open box
     });
   }
 
-  Future<void> getEmployees(BuildContext context) async {
+  Future<void> getProducts(BuildContext context) async {
     isLoading.value = true;
 
-    var hiveEmployees = await getEmployeesFromHive();
+    // First Attempts to get product from local storage
+    var localProducts = await getProductsFromLocatStorage();
 
     logItem("My Hive empl");
-    logItem(hiveEmployees);
+    logItem(localProducts);
 
-    if (hiveEmployees!.isNotEmpty) {
-      hiveEmployees.forEach((element) {
+    // Checks if products exist in local storage
+    if (localProducts!.isNotEmpty) {
+      localProducts.forEach((element) {
         products.add(element);
       });
     } else {
+      // Loads Products from online if not found in local storage
       await loadProducts(context);
     }
 
@@ -60,10 +64,10 @@ class HomeController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<List<dynamic>?> getEmployeesFromHive() async {
+  Future<List<dynamic>?> getProductsFromLocatStorage() async {
     var myList;
 
-    box = await Hive.openBox('ecommerce_box'); // open box
+    box = await Hive.openBox(DBConstants.productBox); // open box
 
     try {
       logItem("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -111,27 +115,12 @@ class HomeController extends GetxController {
         isLoading.value = false;
 
         products.value =
-        DummyProductsResponse.fromJson(response.body)!.products!;
+            DummyProductsResponse.fromJson(response.body)!.products!;
 
         box.put('products', products.value);
 
         logItem(products.length);
 
-        // This is ignored when a category id is specified
-        // if (categoryId == null) {
-        //   var count = 0;
-        //   for (var sermon in praiseReportItems) {
-        //     if (count <= 3) {
-        //       trendingPraiseReports.add(sermon);
-        //     }
-        //     for (var category in praiseReportByCategories) {
-        //       if (sermon.category!.id == category.id) {
-        //         category.praise_reports?.add(sermon);
-        //       }
-        //     }
-        //     count++;
-        //   }
-        // }
         update();
       } else {
         isLoading.value = false;

@@ -1,7 +1,6 @@
 import 'package:ecommerce_app/components/base_screen.dart';
 import 'package:ecommerce_app/components/cart_item_widget.dart';
 import 'package:ecommerce_app/components/custom_button.dart';
-import 'package:ecommerce_app/modules/product_details/product_details_controller.dart';
 import 'package:ecommerce_app/res/color_palette.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +9,9 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../components/goto_cart.dart';
+import '../../components/no_result_widget.dart';
 import '../../configs/routes_contants.dart';
+import '../../controllers/product_items_controller.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -49,7 +50,15 @@ class _CartScreenState extends State<CartScreen> {
             child: Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Column(
+              child: cartController.items.isEmpty ?  const Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(child: NoResultWidget(title: "No Cart Items found",))
+                  ],
+                ),
+              ) : Column(
                 children: [
                   Expanded(
                     child: ListView.builder(

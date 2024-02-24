@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/components/base_screen.dart';
 import 'package:ecommerce_app/models/products/Product.dart';
-import 'package:ecommerce_app/modules/product_details/product_details_controller.dart';
 import 'package:ecommerce_app/res/color_palette.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../components/cart_button.dart';
 import '../../components/goto_cart.dart';
 import '../../configs/routes_contants.dart';
+import '../../controllers/product_items_controller.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Products product;
@@ -64,11 +65,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Hero(
                       tag: widget.product.id!,
                       child: Material(
-                        child: Image.network(
-                          widget.product.thumbnail!,
+                        child: CachedNetworkImage(
                           height: 250,
                           width: double.infinity,
-                          fit: BoxFit.contain,
+                          fit: BoxFit.contain, imageUrl: widget.product.thumbnail!,
                         ),
                       )),
                   const SizedBox(

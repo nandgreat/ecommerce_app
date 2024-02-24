@@ -68,11 +68,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(
+                         Padding(
+                          padding: const EdgeInsets.only(
                             right: 8.0,
                           ),
-                          child: Icon(CupertinoIcons.left_chevron),
+                          child: InkWell(
+                              onTap: () => context.pop(),
+                              child: const Icon(CupertinoIcons.left_chevron)),
                         ),
                         Expanded(
                           child: CustomTextField(

@@ -10,6 +10,7 @@ import '../../data/repositories/products_repository.dart';
 import '../../models/login/User.dart';
 import '../../models/products/DummyProductsResponse.dart';
 import '../../models/products/Product.dart';
+import '../../utils/db_constants.dart';
 
 class SearchProductController extends GetxController {
   final ProductsRepository _productsRepository = ProductsRepository();
@@ -32,7 +33,7 @@ class SearchProductController extends GetxController {
     super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       logItem("we are here oooo");
-      box = await Hive.openBox('ecommerce_box'); // open box
+      box = await Hive.openBox(DBConstants.productBox); // open box
     });
   }
 

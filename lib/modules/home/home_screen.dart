@@ -16,6 +16,7 @@ import '../../components/home_toolbar.dart';
 import '../../components/product_item.dart';
 import '../../models/products/AnotherFakeApiProduct.dart';
 import '../../models/products/Product.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    loginController.getEmployees(context);
+    loginController.getProducts(context);
 
     super.initState();
   }
@@ -81,9 +82,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemBuilder: (context, index) {
                                 Products product =
                                     loginController.products[index];
-                                return ProductItem(
-                                  onPress: () => context.pushNamed(AppRoutes.homeProductDetails.name, extra: {'index': index, 'product': product!}),
-                                    index: index, product: product);
+                                return AnimationConfiguration.staggeredGrid(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 375),
+                                  columnCount: 2,
+                                  child: ScaleAnimation(
+                                    child: FadeInAnimation(
+                                      child: ProductItem(
+                                          onPress: () =>
+                                              context
+                                                  .pushNamed(
+                                                      AppRoutes.homeProductDetails
+                                                          .name,
+                                                      extra: {
+                                                    'index': index,
+                                                    'product': product!
+                                                  }),
+                                          index: index,
+                                          product: product),
+                                    ),
+                                  ),
+                                );
                               },
                             )),
                           ),
