@@ -43,6 +43,7 @@ class ApiClient extends GetConnect implements GetxService {
 
       logItem("667777777===========================");
 
+      print(response.statusCode);
       print(response.body.toString());
       return response;
     } catch (e) {

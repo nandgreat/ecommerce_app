@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart' as pathProvider;
 
 import 'configs/go_router_config.dart';
 import 'models/products/AnotherFakeApiProduct.dart';
+import 'models/products/Product.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,7 @@ Future<void> main() async {
     Hive.init(directory.path);
     await Hive.initFlutter();
 
-    Hive.registerAdapter(AnotherFakeApiProductAdapter());
+    Hive.registerAdapter(ProductsAdapter());
     Hive.registerAdapter(CartItemAdapter());
     await Hive.openBox('ecommerce_box');
 

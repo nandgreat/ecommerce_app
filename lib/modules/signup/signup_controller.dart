@@ -50,11 +50,13 @@ class SignupController extends GetxController {
     try {
       Response? response = await _authRepository.signup(signupRequest);
 
-      if (response == null) {
+      if (response!.body == null) {
         showSnackBar(context,
             title: "Error",
             message: "Failed to Load, Kindly check your internet connection",
             type: 'error');
+        isLoading.value = false;
+
         return;
       }
 

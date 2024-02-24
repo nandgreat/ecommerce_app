@@ -13,7 +13,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../models/login/User.dart';
 
-class LoginController extends GetxController {
+class CartController extends GetxController {
   final AuthRepository _authRepository = AuthRepository();
   Rx<User?> user = User().obs;
   var isLoading = false.obs;
@@ -49,24 +49,21 @@ class LoginController extends GetxController {
         deviceToken: token.value.trim(),
         password: passwordController.text.trim());
 
+    logItem("${emailController.text.trim()} 7777777");
 
     try {
       Response? response = await _authRepository.login(loginRequest);
 
-      if (response!.body == null) {
+      if (response == null) {
         showSnackBar(context,
             title: "Error",
             message: "Failed to Load, Kindly check your internet connection",
             type: 'error');
-        isLoading.value = false;
-
         return;
       }
 
       // ignore: unrelated_type_equality_checks
       if (response.isOk) {
-        isLoading.value = false;
-
         user.value = LoginResponse.fromJson(response.body).data?.user;
         var token = LoginResponse.fromJson(response.body).data?.token;
         String userString = userToJson(user.value!);

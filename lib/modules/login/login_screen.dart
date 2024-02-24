@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     CustomTextField(
                       hintText: 'Enter Email',
                       label: "Email",
+                      functionValidate: validateEmailInput,
                       controller: loginController.emailController,
                       prefixIcon: Icon(
                         Icons.person,

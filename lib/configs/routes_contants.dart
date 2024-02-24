@@ -19,6 +19,7 @@ abstract class AppRoutes {
   static const _homeScopeName = 'home';
   static const rootHome = AppRouteData('home', _homeScopeName, true);
   static const homeProductDetails = AppRouteData('homeProductDetails', _homeScopeName);
+  static const homeProductCart = AppRouteData('homeProductCart', _homeScopeName);
 
   // Users
   static const _usersScopeName = 'users';

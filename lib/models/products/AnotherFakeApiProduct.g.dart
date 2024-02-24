@@ -21,7 +21,7 @@ class AnotherFakeApiProductAdapter extends TypeAdapter<AnotherFakeApiProduct> {
       .._title = fields[1] as String?
       .._price = fields[2] as num?
       .._description = fields[3] as String?
-      .._images = (fields[4] as List?)?.cast<String>()
+      .._images = fields[4] as dynamic
       .._creationAt = fields[5] as String?
       .._updatedAt = fields[6] as String?;
   }

@@ -11,17 +11,18 @@ import '../../data/db/local_entity_repo.dart';
 import '../../data/repositories/products_repository.dart';
 import '../../models/login/User.dart';
 import '../../models/products/AnotherFakeApiProduct.dart';
+import '../../models/products/DummyProductsResponse.dart';
+import '../../models/products/Product.dart';
 
 class HomeController extends GetxController {
   final ProductsRepository _productsRepository = ProductsRepository();
   Rx<User?> user = User().obs;
   var isLoading = false.obs;
 
-  final personRepo = LocalEntityRepository(boxName: "products");
   var box;
 
   RxString token = "".obs;
-  RxList<AnotherFakeApiProduct> products = <AnotherFakeApiProduct>[].obs;
+  RxList<Products> products = <Products>[].obs;
 
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -110,7 +111,7 @@ class HomeController extends GetxController {
         isLoading.value = false;
 
         products.value =
-            FakeApiProductsResponse.fromJson(response.body)!.products!;
+        DummyProductsResponse.fromJson(response.body)!.products!;
 
         box.put('products', products.value);
 

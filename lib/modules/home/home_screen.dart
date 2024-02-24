@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/components/base_screen.dart';
+import 'package:ecommerce_app/models/products/DummyProductsResponse.dart';
 import 'package:ecommerce_app/models/products/FakeApiProducts.dart';
 import 'package:ecommerce_app/modules/home/home_controller.dart';
 import 'package:ecommerce_app/res/color_palette.dart';
@@ -12,6 +13,7 @@ import '../../components/custom_text_input.dart';
 import '../../components/home_toolbar.dart';
 import '../../components/product_item.dart';
 import '../../models/products/AnotherFakeApiProduct.dart';
+import '../../models/products/Product.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -70,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemCount: loginController.products.length,
                               crossAxisSpacing: 2,
                               itemBuilder: (context, index) {
-                                AnotherFakeApiProduct product =
+                                Products product =
                                     loginController.products[index];
                                 return ProductItem(
                                     index: index, product: product);

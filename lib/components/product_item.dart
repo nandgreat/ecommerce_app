@@ -1,10 +1,12 @@
 import 'package:ecommerce_app/configs/routes_contants.dart';
+import 'package:ecommerce_app/models/products/DummyProductsResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/products/AnotherFakeApiProduct.dart';
 import '../models/products/FakeApiProducts.dart';
+import '../models/products/Product.dart';
 import '../utils/helpers.dart';
 
 class ProductItem extends StatelessWidget {
@@ -17,7 +19,7 @@ class ProductItem extends StatelessWidget {
   }) : super(key: key);
 
   final int index;
-  final AnotherFakeApiProduct product;
+  final Products product;
   final double? bottomSpace;
   final Color? backgroundColor;
 
@@ -49,7 +51,7 @@ class ProductItem extends StatelessWidget {
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.white30, width: 1.0),
                           image: DecorationImage(
-                              image: NetworkImage(product.images![0] ?? ""),
+                              image: NetworkImage(product.thumbnail!.replaceFirst("[\"", "").replaceFirst("\"]", "") ?? ""),
                               fit: BoxFit.contain)),
                     ),
                   ),

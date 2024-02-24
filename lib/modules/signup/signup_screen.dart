@@ -28,7 +28,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
-  handleLogin() {
+  handleSignup() {
     hideKeyboard(context);
 
     setState(() {
@@ -73,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     CustomTextField(
                       hintText: 'Enter Full name',
@@ -85,11 +85,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     CustomTextField(
                       hintText: 'Enter Email',
                       label: "Email",
+                      functionValidate: validateEmailInput,
                       controller: signupController.emailController,
                       prefixIcon: Icon(
                         Icons.person,
@@ -98,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     const SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     CustomTextField(
                       hintText: 'Password',
@@ -112,7 +113,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     CustomTextField(
                       hintText: 'Confirm Password',
@@ -127,17 +128,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10.0,
-                    ),
-                    const SizedBox(
                       height: 50.0,
                     ),
                     Obx(() => CustomButton(
                         label: "Create Account",
                         isLoading: signupController.isLoading.value,
-                        onPressed: handleLogin)),
+                        onPressed: handleSignup)),
                     const SizedBox(
-                      height: 70.0,
+                      height: 50.0,
                     ),
                     AuthFooterWidget(type: 'signup')
                   ],

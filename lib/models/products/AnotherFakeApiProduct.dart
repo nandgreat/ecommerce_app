@@ -54,7 +54,7 @@ class AnotherFakeApiProduct {
   String? _description;
 
   @HiveField(4)
-  List<String>? _images;
+  dynamic _images;
 
   @HiveField(5)
   String? _creationAt;
@@ -84,7 +84,7 @@ AnotherFakeApiProduct copyWith({  num? id,
   String? get title => _title;
   num? get price => _price;
   String? get description => _description;
-  List<String>? get images => _images;
+  dynamic get images => _images;
   String? get creationAt => _creationAt;
   String? get updatedAt => _updatedAt;
   Category? get category => _category;

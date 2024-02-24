@@ -1,6 +1,9 @@
 import 'package:ecommerce_app/configs/routes_contants.dart';
 import 'package:ecommerce_app/models/products/FakeApiProducts.dart';
+import 'package:ecommerce_app/models/products/Product.dart';
+import 'package:ecommerce_app/models/products/Product.dart';
 import 'package:ecommerce_app/modules/bottom_nav/bottom_bar.dart';
+import 'package:ecommerce_app/modules/cart/cart_screen.dart';
 import 'package:ecommerce_app/modules/home/home_screen.dart';
 import 'package:ecommerce_app/modules/login/login_screen.dart';
 import 'package:ecommerce_app/modules/product_details/product_details_screen.dart';
@@ -56,10 +59,16 @@ GoRouter provideGoRouter() {
             path: AppRoutes.homeProductDetails.path,
             name: AppRoutes.homeProductDetails.name,
             builder: (context, state) {
-              AnotherFakeApiProduct product = state.extra as AnotherFakeApiProduct; // 👈 casting is important
-
+              Products product = state.extra
+                  as Products; // 👈 casting is important
               return ProductDetailsScreen(product: product);
-              },
+            },
+            routes: [
+              GoRoute(
+                path: AppRoutes.homeProductCart.path,
+                name: AppRoutes.homeProductCart.name,
+                builder: (context, state) => CartScreen())
+            ],
           ),
         ],
       ),
