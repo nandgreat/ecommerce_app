@@ -63,11 +63,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   Hero(
                       tag: widget.product.id!,
-                      child: Image.network(
-                        widget.product.thumbnail!,
-                        height: 250,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
+                      child: Material(
+                        child: Image.network(
+                          widget.product.thumbnail!,
+                          height: 250,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
                       )),
                   const SizedBox(
                     height: 20,

@@ -28,4 +28,9 @@ class ProductsRepository extends GetxService {
     return apiClient.getRequest(url: url);
   }
 
+  Future<Response?> searchProduct(String searchText) async {
+    String url = "${Endpoints.SEARCH_PRODUCTS}?q=$searchText";
+    return apiClient.getRequest(url: url);
+  }
+
 }

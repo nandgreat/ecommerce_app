@@ -7,6 +7,7 @@ import 'package:ecommerce_app/modules/cart/cart_screen.dart';
 import 'package:ecommerce_app/modules/home/home_screen.dart';
 import 'package:ecommerce_app/modules/login/login_screen.dart';
 import 'package:ecommerce_app/modules/product_details/product_details_screen.dart';
+import 'package:ecommerce_app/modules/search/search_screen.dart';
 import 'package:ecommerce_app/modules/verify_otp/verify_otp.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,19 +60,47 @@ GoRouter provideGoRouter() {
             path: AppRoutes.homeProductDetails.path,
             name: AppRoutes.homeProductDetails.name,
             builder: (context, state) {
-
-              Map<String, dynamic> args =
-              state.extra as Map<String, dynamic>;
+              Map<String, dynamic> args = state.extra as Map<String, dynamic>;
               // 👈 casting is important
-              return ProductDetailsScreen(product: args['product'], index: args['index'],);
+              return ProductDetailsScreen(
+                product: args['product'],
+                index: args['index'],
+              );
             },
             routes: [
               GoRoute(
-                path: AppRoutes.homeProductCart.path,
-                name: AppRoutes.homeProductCart.name,
-                builder: (context, state) => CartScreen())
+                  path: AppRoutes.homeProductCart.path,
+                  name: AppRoutes.homeProductCart.name,
+                  builder: (context, state) => CartScreen())
             ],
           ),
+          GoRoute(
+              path: AppRoutes.homeSearch.path,
+              name: AppRoutes.homeSearch.name,
+              builder: (context, state) {
+                return const SearchScreen();
+              },
+              routes: [
+                GoRoute(
+                  path: AppRoutes.homeSearchProductDetails.path,
+                  name: AppRoutes.homeSearchProductDetails.name,
+                  builder: (context, state) {
+                    Map<String, dynamic> args =
+                        state.extra as Map<String, dynamic>;
+                    // 👈 casting is important
+                    return ProductDetailsScreen(
+                      product: args['product'],
+                      index: args['index'],
+                    );
+                  },
+                  routes: [
+                    GoRoute(
+                        path: AppRoutes.homeSearchProductDetailsCart.path,
+                        name: AppRoutes.homeSearchProductDetailsCart.name,
+                        builder: (context, state) => CartScreen())
+                  ],
+                ),
+              ]),
         ],
       ),
     ],

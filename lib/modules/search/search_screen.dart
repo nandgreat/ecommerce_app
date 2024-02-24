@@ -1,19 +1,20 @@
+import 'dart:async';
+
 import 'package:ecommerce_app/components/base_screen.dart';
-import 'package:ecommerce_app/models/products/DummyProductsResponse.dart';
-import 'package:ecommerce_app/models/products/FakeApiProducts.dart';
-import 'package:ecommerce_app/modules/home/home_controller.dart';
+import 'package:ecommerce_app/modules/search/search_controller.dart';
 import 'package:ecommerce_app/res/color_palette.dart';
+import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../components/custom_text_input.dart';
-import '../../components/home_toolbar.dart';
 import '../../components/product_item.dart';
-import '../../models/products/AnotherFakeApiProduct.dart';
+import '../../configs/routes_contants.dart';
 import '../../models/products/Product.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -24,16 +25,30 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  HomeController loginController = Get.put(HomeController());
+  SearchProductController searchController = Get.put(SearchProductController());
   final _formKey = GlobalKey<FormState>();
 
   var remember = false;
 
   @override
   void initState() {
-    loginController.getEmployees(context);
-
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.emailController.clear();
+    searchController.products.clear();
+    super.dispose();
+  }
+
+  Timer? _debounce;
+
+  _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 1500), () {
+      searchController.searchText(query);
+    });
   }
 
   @override
@@ -49,46 +64,68 @@ class _SearchScreenState extends State<SearchScreen> {
               () => Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: !loginController.isLoading.value
-                    ? Column(
-                        children: [
-                          Row(
-                            children: [
-                              Icon(CupertinoIcons.left_chevron),
-                              Expanded(
-                                child: CustomTextField(
-                                  hintText: 'Search any product',
-                                  label: "Search",
-                                  inputPadding: 15.0,
-                                  backgroundColor: Colors.white,
-                                  controller: loginController.emailController,
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey[500]!,
-                                  ),
-                                ),
-                              ),
-                            ],
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            right: 8.0,
                           ),
-                          SizedBox(height: 10,),
-                          Expanded(
+                          child: Icon(CupertinoIcons.left_chevron),
+                        ),
+                        Expanded(
+                          child: CustomTextField(
+                            hintText: 'Search any product',
+                            label: "Search",
+                            autofocus: true,
+                            inputPadding: 15.0,
+                            backgroundColor: Colors.white,
+                            onChange: _onSearchChanged,
+                            controller: searchController.emailController,
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.grey[500]!,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    searchController.isLoading.value
+                        ? const Expanded(
+                            child: SpinKitRing(color: primaryColor, size: 50.0),
+                          )
+                        : Expanded(
                             child: Container(
                                 child: MasonryGridView.count(
                               crossAxisCount: 2,
                               mainAxisSpacing: 2,
-                              itemCount: loginController.products.length,
+                              itemCount: searchController.products.length,
                               crossAxisSpacing: 2,
                               itemBuilder: (context, index) {
                                 Products product =
-                                    loginController.products[index];
+                                    searchController.products[index];
                                 return ProductItem(
-                                    index: index, product: product);
+                                    onPress: () =>
+                                        context
+                                            .pushNamed(
+                                                AppRoutes
+                                                    .homeSearchProductDetails
+                                                    .name,
+                                                extra: {
+                                              'index': index,
+                                              'product': product!
+                                            }),
+                                    index: index,
+                                    product: product);
                               },
                             )),
                           ),
-                        ],
-                      )
-                    : SpinKitRing(color: primaryColor, size: 50.0),
+                  ],
+                ),
               ),
             ),
           ),

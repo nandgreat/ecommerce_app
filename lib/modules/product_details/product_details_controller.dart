@@ -29,6 +29,8 @@ class ProductDetailsController extends GetxController {
   var favourites = [].obs;
   RxBool isFavourite = false.obs;
 
+  RxInt totalSum = 0.obs;
+
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
@@ -50,10 +52,28 @@ class ProductDetailsController extends GetxController {
     try {
       logItem("§§§§§§§§§§§§§§§§§§§§§§§§");
       items.value = await box.get('cart_items', defaultValue: []);
+      totalCartItems();
+
     } catch (error) {
       logItem("###############################################");
       logItem(error);
     } //reversed so as to keep the new data to the top
+    totalCartItems();
+  }
+
+  totalCartItems() {
+
+    totalSum.value = 0;
+
+    logItem("zzzzzzzzzzzzzzzzzzzzzzzzz");
+
+    if(items.isNotEmpty){
+      items.forEach((element) {
+        logItem(int.parse(element.totalAmount!.toString()));
+        totalSum.value += int.parse(element.totalAmount!.toString());
+      });
+    }
+
   }
 
   checkFavourite(Products product) async {

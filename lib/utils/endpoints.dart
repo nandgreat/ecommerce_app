@@ -10,6 +10,7 @@ class Endpoints {
   static const String REGISTER = "auth/register";
   static const String LOGIN = "auth/login";
   static const String LOAD_PRODUCTS = "product";
+  static const String SEARCH_PRODUCTS = "products/search";
   static const String VERIFY_OTP = "auth/verify/";
 
 

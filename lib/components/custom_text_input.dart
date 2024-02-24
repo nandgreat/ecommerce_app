@@ -13,6 +13,7 @@ class CustomTextField extends StatefulWidget {
   final bool? ignoreCursor;
   final VoidCallback? onTap;
   final Widget? prefixIcon;
+  final bool? autofocus;
   final Widget? suffixIcon;
   final String? defaultText;
   final FocusNode? focusNode;
@@ -25,6 +26,7 @@ class CustomTextField extends StatefulWidget {
   final Function? validator;
   final TextEditingController? controller;
   final String? Function(String)? functionValidate;
+  final dynamic? Function(String)? onChange;
   final String? parametersValidate;
   final int? maximumLines;
   final TextInputAction? actionKeyboard;
@@ -34,26 +36,30 @@ class CustomTextField extends StatefulWidget {
 
   CustomTextField(
       {required this.hintText,
-        this.focusNode,
-        this.textInputType,
-        this.defaultText,
-        this.ignoreCursor = false,
-        this.maximumLines = 1,
-        this.onTap,
-        this.inputPadding = 30,
-        this.enabled = true,
-        this.obscureText = false,
-        this.togglePassword = false,
-        this.controller,
-        this.validator,
-        this.functionValidate,
-        this.parametersValidate,
-        this.actionKeyboard = TextInputAction.next,
-        this.onSubmitField,
-        this.onFieldTap,
-        this.prefixIcon,
-        this.suffixIcon,
-        required this.label, this.showLabel = false, this.backgroundColor = inputBackgroundColor});
+      this.focusNode,
+      this.textInputType,
+      this.defaultText,
+      this.ignoreCursor = false,
+      this.maximumLines = 1,
+      this.onTap,
+      this.inputPadding = 30,
+      this.autofocus = true,
+      this.enabled = true,
+      this.obscureText = false,
+      this.togglePassword = false,
+      this.controller,
+      this.validator,
+      this.functionValidate,
+      this.parametersValidate,
+      this.actionKeyboard = TextInputAction.next,
+      this.onSubmitField,
+      this.onFieldTap,
+      this.prefixIcon,
+      this.suffixIcon,
+      required this.label,
+      this.showLabel = false,
+      this.backgroundColor = inputBackgroundColor,
+      this.onChange});
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -62,7 +68,6 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   double bottomPaddingToError = 12;
   late bool _obscureText;
-
 
   @override
   void initState() {
@@ -82,25 +87,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
           children: [
             widget.showLabel!
                 ? Text(
-              widget.label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
-                fontSize: 17.0,
-              ),
-            )
+                    widget.label,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                      fontSize: 17.0,
+                    ),
+                  )
                 : Container(),
             widget.label != null
                 ? const SizedBox(
-              height: 5.0,
-            )
+                    height: 5.0,
+                  )
                 : Container(),
             TextFormField(
               cursorColor: primaryColor,
               obscureText: _obscureText,
+              autofocus: widget.autofocus!,
               keyboardType: widget.textInputType,
               readOnly: widget.ignoreCursor!,
               enabled: widget.enabled,
+              onChanged: (value) => widget.onChange != null
+                  ? widget.onChange!(value!)
+                  : commonValidation(value!, widget.label!),
               textInputAction: widget.actionKeyboard,
               maxLines: widget.maximumLines,
               focusNode: widget.focusNode,
@@ -111,21 +120,27 @@ class _CustomTextFieldState extends State<CustomTextField> {
               initialValue: widget.defaultText,
               decoration: InputDecoration(
                 prefixIcon: widget.prefixIcon,
-                suffixIcon: widget.suffixIcon ?? (widget.togglePassword ? IconButton(
-                  icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      logItem(_obscureText);
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                ): null),
+                suffixIcon: widget.suffixIcon ??
+                    (widget.togglePassword
+                        ? IconButton(
+                            icon: Icon(_obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                logItem(_obscureText);
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          )
+                        : null),
                 filled: true,
                 fillColor: widget.backgroundColor!,
                 hintText: widget.hintText,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Color(0xFFA8A8A9), width: 1.0),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFA8A8A9), width: 1.0),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(13.0),

@@ -15,20 +15,21 @@ class ProductItem extends StatelessWidget {
     required this.index,
     required this.product,
     this.backgroundColor,
-    this.bottomSpace,
+    this.bottomSpace, required this.onPress,
   }) : super(key: key);
 
   final int index;
   final Products product;
   final double? bottomSpace;
   final Color? backgroundColor;
+  final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {
     final child = Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 6.0),
       child: InkWell(
-        onTap: () => context.pushNamed(AppRoutes.homeProductDetails.name, extra: {'index': index, 'product': product!}),
+        onTap: onPress,
         child: Hero(
           tag: product.id!,
           child: Material(

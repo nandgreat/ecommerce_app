@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ecommerce_app/controllers/connection_manager_controller.dart';
 import 'package:ecommerce_app/utils/helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +11,7 @@ import '../../models/login/User.dart';
 import '../../models/products/DummyProductsResponse.dart';
 import '../../models/products/Product.dart';
 
-class SearchController extends GetxController {
+class SearchProductController extends GetxController {
   final ProductsRepository _productsRepository = ProductsRepository();
   Rx<User?> user = User().obs;
   var isLoading = false.obs;
@@ -34,98 +36,58 @@ class SearchController extends GetxController {
     });
   }
 
-  Future<void> getEmployees(BuildContext context) async {
-    isLoading.value = true;
+  Timer? _debounce;
 
-    var hiveEmployees = await getEmployeesFromHive();
 
-    logItem("My Hive empl");
-    logItem(hiveEmployees);
-
-    if (hiveEmployees!.isNotEmpty) {
-      hiveEmployees.forEach((element) {
-        products.add(element);
-      });
-    } else {
-      await loadProducts(context);
-    }
-
-    // filteredEmployees.value = employees;
-
-    isLoading.value = false;
-  }
-
-  Future<List<dynamic>?> getEmployeesFromHive() async {
-    var myList;
-
-    box = await Hive.openBox('ecommerce_box'); // open box
-
-    try {
-      logItem("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      myList = await box.get('products', defaultValue: []);
-    } catch (error) {
-      logItem("###############################################");
-      logItem(error);
-    }
-
-    var newlist = [];
-    if (myList != null) {
-      newlist = myList;
-
-      logItem("ˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆˆ");
-      logItem(newlist);
-    }
-
-    return newlist;
-  }
-
-  Future<void> loadProducts(BuildContext context) async {
+  Future<void> searchText(String searchText) async {
     RxInt idFromFirstController = connectionManagerController.connectionType;
 
     // if (idFromFirstController.value == 0) {
     //   showNoInternetSnackBar();
     //   return;
     // }
+
+    logItem("kdkkdkd----"+searchText!);
+
+    if (searchText.isEmpty) {
+     products.clear();
+      return;
+    }
     isLoading.value = true;
 
     try {
-      Response? response = await _productsRepository.loadProducts();
+        Response? response = await _productsRepository.searchProduct(searchText);
 
-      if (response!.body == null) {
+        if (response!.body == null) {
+          isLoading.value = false;
+
+          return;
+        }
+
+        // isNetworkTimeout.value = false;
+
+        // ignore: unrelated_type_equality_checks
+        if (response.statusCode == 200) {
+          logItem(response.body);
+          logItem("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+          isLoading.value = false;
+
+          products.value =
+          DummyProductsResponse.fromJson(response.body)!.products!;
+
+          logItem(products.length);
+
+          update();
+        } else {
+          isLoading.value = false;
+
+        }
+      } catch (e) {
         isLoading.value = false;
 
-        return;
+        logItem(e);
+
       }
-
-      // isNetworkTimeout.value = false;
-
-      // ignore: unrelated_type_equality_checks
-      if (response.statusCode == 304 || response.statusCode == 200) {
-        logItem(response.body);
-        logItem("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-        isLoading.value = false;
-
-        products.value =
-        DummyProductsResponse.fromJson(response.body)!.products!;
-
-        box.put('products', products.value);
-
-        logItem(products.length);
-
-        update();
-      } else {
-        isLoading.value = false;
-
-        showSnackBar(context,
-            title: "Error", message: "Failed to fetch Products", type: 'error');
-      }
-    } catch (e) {
-      isLoading.value = false;
-
-      logItem(e);
-
-      showSnackBar(context,
-          title: "Error", message: "Unexpected Error occurred", type: 'error');
     }
   }
-}
+
