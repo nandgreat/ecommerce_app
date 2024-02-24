@@ -15,8 +15,10 @@ import '../../configs/routes_contants.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Products product;
+  final int index;
 
-  const ProductDetailsScreen({Key? key, required this.product})
+  const ProductDetailsScreen(
+      {Key? key, required this.product, required this.index})
       : super(key: key);
 
   @override
@@ -29,6 +31,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
 
   var remember = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await loginController.checkFavourite(widget.product);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +107,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           print(rating);
                         },
                       ),
-                      const Icon(
-                        CupertinoIcons.heart,
-                        color: primaryColor,
+                      InkWell(
+                        onTap: () {
+                          if (!loginController.isFavourite.value) {
+                            loginController.addToFavourite(
+                                index: widget.index,
+                                producct: widget.product,
+                                context: context);
+                          } else {
+                            loginController.removeFromFavourite(title: widget.product.title!, context: context);
+                          }
+                        },
+                        child: Icon(
+                          loginController.isFavourite.value
+                              ? CupertinoIcons.heart_fill
+                              : CupertinoIcons.heart,
+                          color: primaryColor,
+                        ),
                       )
                     ],
                   ),
@@ -146,7 +170,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           image: "assets/images/add_to_cart_bg.png",
                           text: "Add to Cart",
                           onPress: () {
-                            loginController.addToCart(widget.product);
+                            loginController.addToCart(widget.product, context);
                           }),
                       CartButton(
                           image: "assets/images/buy_now_bg.png",

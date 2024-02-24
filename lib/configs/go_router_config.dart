@@ -59,9 +59,11 @@ GoRouter provideGoRouter() {
             path: AppRoutes.homeProductDetails.path,
             name: AppRoutes.homeProductDetails.name,
             builder: (context, state) {
-              Products product = state.extra
-                  as Products; // 👈 casting is important
-              return ProductDetailsScreen(product: product);
+
+              Map<String, dynamic> args =
+              state.extra as Map<String, dynamic>;
+              // 👈 casting is important
+              return ProductDetailsScreen(product: args['product'], index: args['index'],);
             },
             routes: [
               GoRoute(

@@ -24,7 +24,10 @@ class ProductDetailsController extends GetxController {
 
   RxString token = "".obs;
   var box;
+  var box2;
   var items = [].obs;
+  var favourites = [].obs;
+  RxBool isFavourite = false.obs;
 
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -38,13 +41,12 @@ class ProductDetailsController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       logItem("we are here oooo");
       box = await Hive.openBox('ecommerce_box'); // open box
+      box2 = await Hive.openBox('favourite_items_box');
       await getItems();
     });
   }
 
   getItems() async {
-    box = await Hive.openBox('ecommerce_box'); // open box
-
     try {
       logItem("§§§§§§§§§§§§§§§§§§§§§§§§");
       items.value = await box.get('cart_items', defaultValue: []);
@@ -54,19 +56,57 @@ class ProductDetailsController extends GetxController {
     } //reversed so as to keep the new data to the top
   }
 
+  checkFavourite(Products product) async {
+    try {
+      logItem("±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±");
+      favourites.value = await box2.values.toList();
+    } catch (error) {
+      logItem("###############################################");
+      logItem(error);
+    } //reversed so as to keep the new data to the top
 
-  addToCart(Products producct) async {
-    box = await Hive.openBox('ecommerce_box');
+    if (favourites.isNotEmpty) {
+      logItem(favourites[0]);
 
+      var myIndex = favourites.indexWhere((element) {
+        logItem("qqqqqqqqqqqq");
+        logItem(element);
+        return element.title == product.title;
+      });
+
+      if (myIndex != -1) {
+        isFavourite.value = true;
+      } else {
+        isFavourite.value = false;
+      }
+    } else {
+      isFavourite.value = false;
+
+      logItem("favourite is empty ooo");
+    }
+  }
+
+  getFavourite() async {
+    favourites.value = [];
+    try {
+      logItem("±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±");
+      favourites.value = await box2.values.toList();
+    } catch (error) {
+      logItem("###############################################");
+      logItem(error);
+    } //reversed so as to keep the new data to the top
+
+  }
+
+  addToCart(Products producct, BuildContext context) async {
     logItem("lllsjkdlkfsldkjfslkdj");
 
     var itemInCart = null;
 
-    if(items.isNotEmpty) {
+    if (items.isNotEmpty) {
       logItem(items[0].title);
       items.forEach((element) {
-        if(element.title == producct.title){
-
+        if (element.title == producct.title) {
           logItem("Ttotal is: ${element.totalAmount}");
           itemInCart = element;
         }
@@ -75,7 +115,7 @@ class ProductDetailsController extends GetxController {
 
     if (itemInCart != null) {
       int itemIndex =
-      items.indexWhere((element) => element.title == producct.title);
+          items.indexWhere((element) => element.title == producct.title);
       logItem("lllsjkdlkfsldkjfslkdj $itemInCart");
 
       itemInCart.quantity = itemInCart.quantity + 1;
@@ -100,35 +140,36 @@ class ProductDetailsController extends GetxController {
     logItem(items);
 
     await box.put('cart_items', items);
+
+    showSnackBar(context,
+        title: "Added Successfuly",
+        message: "Item Added to cart successfully",
+        type: "success");
     // getItems();
   }
 
+  addToFavourite(
+      {required int index,
+      required Products producct,
+      required BuildContext context}) async {
+    logItem("lllsjkdlkfsldkjfslkdj");
 
-  // addToCart(Products producct) async {
-  //   box = await Hive.openBox('ecommerce_box');
-  //
-  //   logItem("lllsjkdlkfsldkjfslkdj");
-  //
-  //   CartItem dataModel = CartItem(
-  //       title: producct.title,
-  //       image: producct.thumbnail,
-  //       description: producct.description,
-  //       amount: int.parse(producct.price.toString()),
-  //       quantity: 1,
-  //       rating: double.parse(producct.rating.toString()),
-  //       totalAmount: int.parse(producct.price.toString()));
-  //
-  //   items.add(dataModel);
-  //
-  //   logItem(items);
-  //
-  //   await box.put('cart_items', items);
-  //   // getItems();
-  // }
+    favourites.add(producct);
+
+    logItem(favourites);
+
+    await box2.add(producct);
+
+    await checkFavourite(producct);
+
+    showSnackBar(context,
+        title: "Added Successfuly",
+        message: "Item Added to Favourite successfully",
+        type: "success");
+    // getItems();
+  }
 
   removeFromCart(String title) async {
-    box = await Hive.openBox('ecommerce_box');
-
     logItem("lllsjkdlkfsldkjfslkdj $title");
 
     int itemIndex = items.indexWhere((element) => element.title == title);
@@ -141,6 +182,24 @@ class ProductDetailsController extends GetxController {
 
     await box.put('cart_items', items);
     // getItems();
+  }
+
+  removeFromFavourite(
+      {int? index, String? title, required BuildContext context}) async {
+    int itemIndex = 0;
+
+    itemIndex =
+        index ?? favourites.indexWhere((element) => element.title == title);
+
+    logItem("lllsjkdlkfsldkjfslkdj $itemIndex");
+
+    favourites.removeAt(itemIndex);
+
+    logItem(favourites);
+
+
+    await box2.deleteAt(0);
+    getFavourite();
   }
 
   Future<void> login(BuildContext context) async {

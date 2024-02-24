@@ -28,7 +28,7 @@ class ProductItem extends StatelessWidget {
     final child = Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 6.0),
       child: InkWell(
-        onTap: () => context.pushNamed(AppRoutes.homeProductDetails.name, extra: product),
+        onTap: () => context.pushNamed(AppRoutes.homeProductDetails.name, extra: {'index': index, 'product': product!}),
         child: Hero(
           tag: product.id!,
           child: Material(

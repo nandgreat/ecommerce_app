@@ -11,6 +11,7 @@ import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 
 import '../cart/cart_screen.dart';
+import '../favourites/favourites_screen.dart';
 import '../setting/setting_screen.dart';
 
 class BottomBarNav extends StatefulWidget {
@@ -58,7 +59,7 @@ class _BottomBarNavState extends State<BottomBarNav> {
 
   List<Widget> pages = [
     HomeScreen(),
-    HomeScreen(),
+    FavouritesScreen(),
     CartScreen(),
     SettingScreen(),
   ];

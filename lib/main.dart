@@ -21,7 +21,6 @@ Future<void> main() async {
 
     Hive.registerAdapter(ProductsAdapter());
     Hive.registerAdapter(CartItemAdapter());
-    await Hive.openBox('ecommerce_box');
 
 
   runApp(const MyApp());
